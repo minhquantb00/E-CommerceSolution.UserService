@@ -18,12 +18,28 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 //FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
+//Add API explorer services
+builder.Services.AddEndpointsApiExplorer();
+//Add swagger generation services to create swagger specification
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+    });
+});
 //Build the web application
 var app = builder.Build();
 
 app.UseExceptionHandlingMiddleware();
 //Routing
 app.UseRouting();
+app.UseSwagger();  //Adds endpoint that can serve the swagger.json
+app.UseSwaggerUI();
+app.UseCors();
+
 
 //Auth
 app.UseAuthentication();
